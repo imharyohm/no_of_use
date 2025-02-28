@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Content Moderation Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+    <script>
+        function toggleInputs() {
+            const analysisType = document.querySelector('input[name="analysis_type"]:checked').value;
+            document.getElementById('text-input').style.display = analysisType === 'text' ? 'block' : 'none';
+            document.getElementById('image-input').style.display = analysisType === 'image' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body onload="toggleInputs()">
+
+<h2>Content Moderation Tool</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <label><input type="radio" name="analysis_type" value="text" checked onclick="toggleInputs()"> Analyze Text</label>
+    <label><input type="radio" name="analysis_type" value="image" onclick="toggleInputs()"> Analyze Image</label>
+
+    <div id="text-input" style="margin-top: 10px;">
+        <label for="text">Enter Text:</label><br>
+        <textarea name="text" id="text" rows="4" cols="50"></textarea>
+    </div>
+
+    <div id="image-input" style="margin-top: 10px; display: none;">
+        <label for="file">Upload Image:</label>
+        <input type="file" name="file" id="file" accept="image/*">
+    </div>
+
+    <button type="submit" style="margin-top: 15px;">Analyze</button>
+</form>
+
+{% if result %}
+<div class="result">
+    <h3>Moderation Result</h3>
+    {% if result.input_type == 'text' %}
+        <p><strong>Input Type:</strong> Text</p>
+        <p><strong>Text:</strong> {{ result.content }}</p>
+    {% else %}
+        <p><strong>Input Type:</strong> Image</p>
+        <p><strong>Filename:</strong> {{ result.filename }}</p>
+    {% endif %}
+    <p><strong>Category:</strong> {{ result.category }}</p>
+</div>
+{% endif %}
+
+</body>
+</html>
